@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Swirl</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+    body {
+      background-color: #000;
+      font-family: 'Poppins', sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: -1;
+    }
+
+    h1 {
+      color: #fff;
+      font-size: 36px;
+      font-weight: 600;
+      margin-top: 80px;
+    }
+
+    p {
+      color: #ddd;
+      font-size: 18px;
+      font-weight: 400;
+    }
+
+    .invisible-button {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 40px;
+      height: 40px;
+      opacity: 0;
+      cursor: pointer;
+      z-index: 9999;
+    }
+  </style>
+</head>
+<body>
+  <canvas></canvas>
+
+  <h1>The Swirl</h1>
+  <p>This is the swirl. Observe the swirl. Enjoy the swirl. Worship the swirl.</p>
+
+  <div class="invisible-button"></div>
+
+  <script>
+    // Create a mesmerizing and hypnotic moving image
+    const canvas = document.querySelector('canvas');
+    const ctx = canvas.getContext('2d');
+
+    let width, height;
+    let angle = 0;
+    let radius = 0;
+    let radiusIncrement = 0.05;
+
+    function resizeCanvas() {
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = width;
+      canvas.height = height;
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, width, height);
+
+      // Create a rotating background gradient
+      const gradient = ctx.createLinearGradient(0, 0, width, height);
+      gradient.addColorStop(0, 'rgba(255, 255, 255, 0)');
+      gradient.addColorStop(0.5, 'rgba(255, 255, 255, 0)');
+      gradient.addColorStop(1, 'rgba(255, 255, 255, 0.2)');
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, width, height);
+
+      // Create an animated rotating spiral
+      const centerX = width * 0.5;
+      const centerY = height * 0.5;
+      const numSpirals = 10;
+      const numSegments = 300;
+      const angleIncrement = 0.02;
+      const maxRadius = Math.min(width, height) * 0.4;
+
+      ctx.save();
+      ctx.translate(centerX, centerY);
+      ctx.scale(0.5, 0.5); // Scale the pattern to 50% size
+
+      for (let i = 0; i < numSegments; i++) {
+        const angleOffset = i * angleIncrement;
+        const radiusOffset = i * radiusIncrement;
+
+        const x = Math.cos(angle + angleOffset) * (radius + radiusOffset);
+        const y = Math.sin(angle + angleOffset) * (radius + radiusOffset);
+
+        const hue = (i / numSegments) * 360;
+
+        ctx.beginPath();
+        ctx.arc(x, y, radius + radiusOffset, 0, Math.PI * 2);
+        ctx.fillStyle = `hsl(${hue}, 80%, 60%)`;
+        ctx.fill();
+      }
+
+      radius += radiusIncrement;
+
+      if (radius > maxRadius) {
+        radiusIncrement *= -1;
+      } else if (radius <= 0) {
+        radiusIncrement *= -1;
+      }
+
+      ctx.restore();
+
+      angle += angleIncrement;
+
+      requestAnimationFrame(draw);
+    }
+
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+    draw();
+
+    const invisibleButton = document.querySelector('.invisible-button');
+
+    invisibleButton.addEventListener('click', () => {
+      document.body.style.backgroundColor = '#000';
+      // Add code for the transition effect and typewriter animation here
+    });
+  </script>
+</body>
+</html>
+
